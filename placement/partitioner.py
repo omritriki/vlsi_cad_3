@@ -1,0 +1,3 @@
+def partitioner():
+    
+    return None

@@ -1,21 +1,23 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 @dataclass
 class Gate:
-    id: int
+    GateID: int
     connected_nets: List[int]
+    floatXcoordinate: Optional[float] = None
+    floatYcoordinate: Optional[float] = None
 
 @dataclass
 class Pad:
-    id: int
-    net_id: int
-    x: int
-    y: int
+    PinID: int
+    NetNumberConnectedTo: int
+    PinX: int
+    PinY: int
 
 @dataclass
 class Circuit:
-    num_gates: int
-    num_nets: int
+    G: int
+    N: int
     gates: List[Gate]
     pads: List[Pad]

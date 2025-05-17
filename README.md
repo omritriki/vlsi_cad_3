@@ -32,10 +32,18 @@ Each test includes hundreds to thousands of gates and nets.
 ## 📁 File Structure
 
 ```
-├── src/                # Core placement logic and matrix construction
 ├── benchmarks/         # Input netlists for testing
-├── output/             # Output placement files
-├── utils/              # Helper functions
+│   └── 3QP/           # Test cases
+├── file_io/           # File parsing utilities
+│   ├── __init__.py
+│   └── parser.py      # Circuit netlist parser
+├── models/            # Data models
+│   ├── __init__.py
+│   └── circuit.py     # Circuit, Gate, and Pad classes
+├── placement/         # Placement algorithms
+│   ├── __init__.py
+│   └── partitioner.py # Partitioning implementation
+├── main.py           # Main program entry point
 └── README.md
 ```
 
@@ -53,7 +61,7 @@ pip install numpy scipy
 ## ▶️ Run
 
 ```bash
-python main.py --input benchmarks/toy1.txt --output output/toy1.out
+python main.py
 ```
 
 ## 📈 Visualization
@@ -61,18 +69,6 @@ python main.py --input benchmarks/toy1.txt --output output/toy1.out
 To visualize the output placements, use the web tool:
 **[Visualizer Tool](https://spark-public.s3.amazonaws.com/vlsicad/javascript_tools/visualize.html)**  
 Drag and drop your output file for instant rendering.
-
-## 📜 Output Format
-
-Each line of the output file includes:
-```
-GateID  X-coordinate  Y-coordinate
-```
-Coordinates are in floating point with 8-digit precision.
-
-## 🏆 Extra Credit (Optional)
-
-Includes a scalable framework for recursive 8x8 partitioning to implement full chip-level placement with deeper cuts.
 
 ## 📚 Credits
 

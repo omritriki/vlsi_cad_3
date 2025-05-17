@@ -17,7 +17,7 @@ from scipy.sparse.linalg import spsolve
 
 
 def main():
-    print "Solve small matrix..."
+    print("Solve small matrix...")
     R = array([0, 0, 1, 1, 1, 2, 2])
     C = array([0, 1, 0, 1, 2, 1, 2])
     V = array([4.0, -1.0, -1.0,  4.0, -1.0, -1.0, 4.0])
@@ -25,23 +25,23 @@ def main():
     A = coo_matrix((V, (R, C)), shape=(3, 3))
     # convert to csr format for efficiency
     x = spsolve(A.tocsr(), b)
-    print "x = ", x
+    print("x = ", x)
 
-    print "Solve psd matrix..."
+    print("Solve psd matrix...")
     # skip the first row (n, nnz)
     A = numpy.genfromtxt('../data/psd.txt', skiprows=1)
     b = numpy.genfromtxt('../data/b.txt')
     coo = coo_matrix((A[:, 2], (A[:, 0], A[:, 1])))
     x = spsolve(coo.tocsr(), b)
-    print 'x = ', x
+    print('x = ', x)
 
-    print "Solve big matrix..."
+    print("Solve big matrix...")
     A = numpy.genfromtxt('../data/mat_helmholtz.txt', skiprows=1)
     coo = coo_matrix((A[:, 2], (A[:, 0], A[:, 1])))
     n = coo.shape[0]
     b = numpy.ones(n)
     x = spsolve(coo.tocsr(), b)
-    print 'x = ', x
+    print('x = ', x)
 
 if __name__ == '__main__':
     main()

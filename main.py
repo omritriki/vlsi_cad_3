@@ -1,6 +1,10 @@
 from file_io.parser import parse
 from file_io.writer import write_placement, verify_placement
 from placement.placer import placer
+from placement.partitioner import partitioner
+from placement.containment import containment
+from models.circuit import Circuit, Gate, Pad
+
 
 BENCHMARKS = {
     'toy1': {
@@ -45,18 +49,36 @@ def main():
     benchmark_list = list(BENCHMARKS.items())
     
     # 1: toy1, 2: toy2, 3: fract, 4: primary1, 5: struct
-    SELECTED_BENCHMARK = 5
+    SELECTED_BENCHMARK = 1
         
     name, info = benchmark_list[SELECTED_BENCHMARK - 1]
     path = info['path']
     output_path = f'output.txt'
 
-    circuit = parse(path)
-    print(f"Circuit {path} contains {circuit.G} gates and {circuit.N} nets")
+    input_circuit = parse(path)
+    print(f"Circuit {path} contains {input_circuit.G} gates and {input_circuit.N} nets")
 
-    QP1 = placer(circuit) 
+    QP1 = placer(input_circuit) 
 
-    write_placement(QP1, output_path)
+    left_half, right_half = partitioner(QP1)
+
+    contained_left = containment(left_half, QP1, 0)
+
+    QP2 = placer(contained_left)
+
+    contained_right = containment(right_half, QP2, 1)
+
+    QP3 = placer(contained_right)
+
+    # Merge the two partitions - QP2 and QP3
+    merged = Circuit(
+        G=QP2.G + QP3.G,
+        N=max(QP2.N, QP3.N),  # Keep original net count
+        gates=QP2.gates + QP3.gates,
+        pads=QP2.pads  # Pads remain the same as original
+    )
+
+    write_placement(merged, output_path)
     
     return 0
 

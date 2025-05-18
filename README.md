@@ -5,76 +5,95 @@ This repository contains my implementation of the 3QP (Three Quadratic Placement
 ## 📌 Overview
 
 The placer optimizes gate positions to minimize quadratic wirelength over a 100x100 chip area, using a recursive cut-and-contain strategy. It performs:
-- One full-chip quadratic placement.
-- One placement for gates on the left half.
-- One placement for gates on the right half.
-
-These steps simulate a realistic analytical placer by solving sparse linear systems derived from netlist connectivity.
+1. Initial full-chip quadratic placement (QP1)
+2. Vertical partitioning at x=50
+3. Left-side containment and placement (QP2)
+4. Right-side containment and placement (QP3)
+5. Final merged placement
 
 ## 💡 Features
 
-- Reads standard-format netlists with gates and fixed I/O pad positions.
-- Builds Laplacian matrix for net connectivity and solves Ax = bx, Ay = by for coordinates.
-- Divides gates using a vertical partition at X=50.
-- Performs containment to represent inter-region connections.
-- Outputs precise gate coordinates for visualization or further use.
+- Reads standard-format netlists with gates and fixed I/O pad positions
+- Builds Laplacian matrix for net connectivity
+- Solves sparse linear systems (Ax = bx, Ay = by) for coordinates
+- Implements recursive partitioning with centerline containment
+- Supports various benchmark sizes from 18 to 1888 gates
+- Outputs precise gate coordinates (8 decimal places)
 
 ## 🧪 Benchmarks
 
-Supports all official Coursera testcases:
-- toy1, toy2
-- fract
-- primary1
-- struct
-
-Each test includes hundreds to thousands of gates and nets.
+Supported test cases with statistics:
+| Name     | Gates | Nets | Pads | Points |
+|----------|-------|------|------|--------|
+| toy1     | 18    | 20   | 6    | 20     |
+| toy2     | 32    | 42   | 10   | 20     |
+| fract    | 125   | 147  | 24   | 20     |
+| primary1 | 752   | 902  | 107  | 20     |
+| struct   | 1888  | 1920 | 64   | 20     |
 
 ## 📁 File Structure
 
 ```
-├── benchmarks/         # Input netlists for testing
+├── benchmarks/         # Input netlists
 │   └── 3QP/           # Test cases
-├── file_io/           # File parsing utilities
+├── file_io/           # File handling
 │   ├── __init__.py
-│   └── parser.py      # Circuit netlist parser
-├── models/            # Data models
+│   ├── parser.py      # Circuit parser
+│   └── writer.py      # Placement writer
+├── models/            # Data structures
 │   ├── __init__.py
-│   └── circuit.py     # Circuit, Gate, and Pad classes
-├── placement/         # Placement algorithms
+│   └── circuit.py     # Circuit model
+├── placement/         # Core algorithms
 │   ├── __init__.py
-│   └── partitioner.py # Partitioning implementation
-├── main.py           # Main program entry point
+│   ├── placer.py      # QP solver
+│   ├── partitioner.py # Bisection
+│   └── containment.py # Boundary handling
+├── main.py           # Entry point
 └── README.md
 ```
 
 ## 🔧 Requirements
 
 - Python 3.x
-- NumPy
-- SciPy
+- NumPy: Matrix operations
+- SciPy: Sparse linear solver
 
 Install dependencies:
 ```bash
 pip install numpy scipy
 ```
 
-## ▶️ Run
+## ▶️ Usage
 
+1. Select benchmark in main.py (1-5):
+```python
+SELECTED_BENCHMARK = 1  # toy1
+```
+
+2. Run the placer:
 ```bash
 python main.py
 ```
 
+3. Check output.txt for gate coordinates
+
 ## 📈 Visualization
 
-To visualize the output placements, use the web tool:
-**[Visualizer Tool](https://spark-public.s3.amazonaws.com/vlsicad/javascript_tools/visualize.html)**  
-Drag and drop your output file for instant rendering.
+View placements using the official visualizer:
+**[3QP Visualizer Tool](https://spark-public.s3.amazonaws.com/vlsicad/javascript_tools/visualize.html)**
+
+Features:
+- Interactive placement viewer
+- Drag & drop output files
+- Shows gates, pads, and nets
+- Validates coordinate bounds
 
 ## 📚 Credits
 
-This project is based on materials from the **University of Illinois at Urbana-Champaign**.  
-Assignment by **Prof. Rob A. Rutenbar** and teaching team.
+- Course: VLSI CAD: Logic to Layout
+- Institution: University of Illinois at Urbana-Champaign
+- Instructor: Prof. Rob A. Rutenbar
 
 ---
 
-Feel free to fork or reuse the implementation.
+For implementation details, see individual source files.

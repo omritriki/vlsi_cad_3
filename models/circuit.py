@@ -5,8 +5,8 @@ from typing import List, Optional
 class Gate:
     GateID: int
     connected_nets: List[int]
-    floatXcoordinate: Optional[float] = None
-    floatYcoordinate: Optional[float] = None
+    floatXcoordinate: Optional[float] = 0
+    floatYcoordinate: Optional[float] = 0
 
 @dataclass
 class Pad:

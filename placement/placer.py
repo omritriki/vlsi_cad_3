@@ -3,7 +3,7 @@ import numpy as np
 from models.circuit import Circuit, Gate, Pad
 
 
-def placer(input_circuit: Circuit, pad_weight: float = 1.0, limit: float = 100.0) -> Circuit:
+def placer(input_circuit: Circuit, left_limit: int, right_limit: int) -> Circuit:
     G = input_circuit.G                
     C = [[0.0] * G for _ in range(G)]  
 
@@ -32,7 +32,7 @@ def placer(input_circuit: Circuit, pad_weight: float = 1.0, limit: float = 100.0
         for net in g.connected_nets:
             for pad in input_circuit.pads:
                 if net == pad.NetNumberConnectedTo:       
-                    pad_deg += pad_weight
+                    pad_deg += 1
         A[i][i] = -sum(A[i]) + pad_deg                    
 
     # Build b vectors 
@@ -43,8 +43,8 @@ def placer(input_circuit: Circuit, pad_weight: float = 1.0, limit: float = 100.0
         for net in g.connected_nets:
             for pad in input_circuit.pads:
                 if net == pad.NetNumberConnectedTo:
-                    b_x[i] += pad_weight * pad.PinX
-                    b_y[i] += pad_weight * pad.PinY
+                    b_x[i] += 1 * pad.PinX
+                    b_y[i] += 1 * pad.PinY
 
     # Solve Ax = b 
     A_np = np.array(A, dtype=float)
@@ -57,7 +57,7 @@ def placer(input_circuit: Circuit, pad_weight: float = 1.0, limit: float = 100.0
 
     # Assign coordinates 
     for i, gate in enumerate(input_circuit.gates):
-        gate.floatXcoordinate = max(0.0, min(limit, x[i]))
-        gate.floatYcoordinate = max(0.0, min(limit, y[i]))
+        gate.floatXcoordinate = max(left_limit, min(right_limit, x[i]))
+        gate.floatYcoordinate = max(0.0, min(100.0, y[i]))
 
     return input_circuit

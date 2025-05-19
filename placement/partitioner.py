@@ -1,7 +1,8 @@
+from typing import List, Tuple
 from models.circuit import Circuit, Gate, Pad
 
 
-def partitioner(input_circuit: Circuit):
+def partitioner(input_circuit: Circuit) -> Tuple[List[Gate], List[Gate]]:
     if not hasattr(input_circuit.gates[0], 'floatXcoordinate'):
         raise AttributeError("Gates must have floatXcoordinate and floatYcoordinate attributes")
 

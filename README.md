@@ -22,14 +22,14 @@ The placer optimizes gate positions to minimize quadratic wirelength over a 100x
 
 ## 🧪 Benchmarks
 
-Supported test cases with statistics:
-| Name     | Gates | Nets | Pads | Points |
-|----------|-------|------|------|--------|
-| toy1     | 18    | 20   | 6    | 20     |
-| toy2     | 32    | 42   | 10   | 20     |
-| fract    | 125   | 147  | 24   | 20     |
-| primary1 | 752   | 902  | 107  | 20     |
-| struct   | 1888  | 1920 | 64   | 20     |
+Supported test cases:
+| Name     | Gates | Nets | Pads |
+|----------|-------|------|------|
+| toy1     | 18    | 20   | 6    | 
+| toy2     | 32    | 42   | 10   | 
+| fract    | 125   | 147  | 24   |
+| primary1 | 752   | 902  | 107  | 
+| struct   | 1888  | 1920 | 64   |
 
 ## 📁 File Structure
 

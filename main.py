@@ -58,29 +58,30 @@ def main():
     input_circuit = parse(path)
     print(f"Circuit {path} contains {input_circuit.G} gates and {input_circuit.N} nets")
 
-    QP1 = placer(input_circuit) 
+    QP1: Circuit = placer(input_circuit, 0, 100) 
 
-    left_half, right_half = partitioner(QP1)
+    left_half, right_half = partitioner(QP1)  
 
-    contained_left = containment(left_half, QP1, 0)
+    contained_left: Circuit = containment(left_half, QP1, 0, 50)
 
-    QP2 = placer(contained_left)
+    QP2: Circuit = placer(contained_left, 0, 50)
 
-    contained_right = containment(right_half, QP2, 1)
+    contained_right = containment(right_half, QP1, 50, 100)
 
-    QP3 = placer(contained_right)
+    QP3 = placer(contained_right, 50, 100)
 
     # Merge the two partitions - QP2 and QP3
-    merged = Circuit(
-        G=QP2.G + QP3.G,
-        N=max(QP2.N, QP3.N),  # Keep original net count
-        gates=QP2.gates + QP3.gates,
-        pads=QP2.pads  # Pads remain the same as original
-    )
+    # merged = Circuit(
+    #     G=input_circuit.G,  # Keep original gate count
+    #     N=input_circuit.N,  # Keep original net count
+    #     gates=QP2.gates + QP3.gates,
+    #     pads=input_circuit.pads  # Pads remain the same as original
+    # )
 
-    write_placement(merged, output_path)
-    
+    # write_placement(merged, output_path)
+    write_placement(QP3, output_path)
     return 0
+
 
 if __name__ == '__main__':
     main()

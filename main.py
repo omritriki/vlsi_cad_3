@@ -58,8 +58,10 @@ def main():
     input_circuit = parse(path)
     print(f"Circuit {path} contains {input_circuit.G} gates and {input_circuit.N} nets")
 
+    # This looks okay
     QP1: Circuit = placer(input_circuit, 0, 100) 
 
+    # This looks okay
     left_half, right_half = partitioner(QP1)  
 
     contained_left: Circuit = containment(left_half, QP1, 0, 50)

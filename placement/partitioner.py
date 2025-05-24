@@ -15,7 +15,4 @@ def partitioner(input_circuit: Circuit) -> Tuple[List[Gate], List[Gate]]:
     left_half = sorted_gates[:input_circuit.G // 2]
     right_half = sorted_gates[input_circuit.G // 2:]
 
-    print(len(left_half), len(right_half))
-
-
     return left_half, right_half

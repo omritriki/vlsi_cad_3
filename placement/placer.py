@@ -7,11 +7,14 @@ def placer(input_circuit: Circuit, left_limit: int, right_limit: int) -> Circuit
     G = input_circuit.G                
     C = [[0.0] * G for _ in range(G)]  
 
+    # Create mapping from gate IDs to matrix indices
+    gate_id_to_index = {gate.GateID: i for i, gate in enumerate(input_circuit.gates)}
+
     # Build C with a hash map: net -> list of GateIDs 
     net_to_gates = defaultdict(list)
     for g in input_circuit.gates:
         for net in g.connected_nets:
-            net_to_gates[net].append(g.GateID - 1)       
+            net_to_gates[net].append(gate_id_to_index[g.GateID])       
 
     for gate_indices in net_to_gates.values():
         k = len(gate_indices)
@@ -27,7 +30,7 @@ def placer(input_circuit: Circuit, left_limit: int, right_limit: int) -> Circuit
     # Build A (Laplacian + pad degrees) 
     A = [[-C[i][j] for j in range(G)] for i in range(G)]
     for g in input_circuit.gates:
-        i = g.GateID - 1
+        i = gate_id_to_index[g.GateID]
         pad_deg = 0.0
         for net in g.connected_nets:
             for pad in input_circuit.pads:
@@ -39,7 +42,7 @@ def placer(input_circuit: Circuit, left_limit: int, right_limit: int) -> Circuit
     b_x = [0.0] * G
     b_y = [0.0] * G
     for g in input_circuit.gates:
-        i = g.GateID - 1
+        i = gate_id_to_index[g.GateID]
         for net in g.connected_nets:
             for pad in input_circuit.pads:
                 if net == pad.NetNumberConnectedTo:
